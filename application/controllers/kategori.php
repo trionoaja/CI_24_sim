@@ -13,9 +13,34 @@ class kategori extends CI_Controller {
     {
         $data['kategori']=$this->kategori_model->get_all();
 		$this->load->view('templates/header');
-        $this->load->view('templates/topbar');
         $this->load->view('templates/sidebar');
+        $this->load->view('templates/topbar');
         $this->load->view('kategori/index', $data);
 		$this->load->view('templates/footer');
+    }
+    public function tambah()
+    {
+        $this->load->view('templates/header');
+        $this->load->view('templates/sidebar');
+        $this->load->view('templates/topbar');
+        $this->load->view('kategori/tambah');
+		$this->load->view('templates/footer');
+    }
+    public function simpan()
+    {
+        $this->load->library('form_validation');
+        $this->form_validation->set_rules('nama_kategori', 'Nama Kategori', 'required');
+
+        if($this->form_validation->run()==FALSE){
+            $this->tambah();
+        } else{
+            $data=[ 
+                'nama_kategori'=> $this->input->post('nama_kategori')
+            ];
+            $this->kategori_model->insert($data);
+
+            $this->session->set_flashdata('success', 'Data berhasil disimpan');
+            redirect('kategori');
+        }
     }
 }

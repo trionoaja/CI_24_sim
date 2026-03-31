@@ -12,7 +12,7 @@
 
 <!-- Page Wrapper -->
 <div id="wrapper">
-<div id="content-wrapper" class="d-flex flex-column">
+<!-- <div id="content-wrapper" class="d-flex flex-column">
 
-<!-- Main Content -->
-<div id="content">
+Main Content
+<div id="content"> -->
