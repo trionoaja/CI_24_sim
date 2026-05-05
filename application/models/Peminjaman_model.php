@@ -35,31 +35,34 @@ class Peminjaman_model extends CI_Model{
     }
     public function pengembalian($id)
     {
-        $detail = $this->get_detail($id);
+    $detail = $this->get_detail($id);
 
-        $pinjam = $this->db->get_where('peminjaman', ['id =>$id'])->row();
+    
+    $pinjam = $this->db->get_where('peminjaman', ['id' => $id])->row();
 
-        $today=date('Y-m-d');
-        $terlambat=0;
-        $denda=0;
+    $today = date('Y-m-d');
+    $jatuh = $pinjam->tanggal_jatuh_tempo;
 
-        if($today > $pinjam->tanggal_jatuh_tempo){
-            $terlambat = (strtotime($today) - strtotime($pinjam->tanggal_jatuh_tempo)) / 86400;
-            $denda = $terlambat * 1000;
-        }
+//    HITUNG DENDA 
+    $selisih = strtotime($today) - strtotime($jatuh);
+    $terlambat = $selisih > 0 ? floor($selisih / 86400) : 0;
+    $denda = $terlambat * 1000;
 
-        $this->db->insert('pengembalian', [
-            'peminjaman_id'=>$id,
-            'tanggal_kembali'=> $today,
-            'terlambat'=>$terlambat,
-            'denda'=> $denda
-        ]);
+    // simpan pengembalian
+    $this->db->insert('pengembalian', [
+        'peminjaman_id' => $id,
+        'tanggal_kembali' => $today,
+        'terlambat' => $terlambat,
+        'denda' => $denda
+    ]);
 
-        $this->db->where('id', $id);
-        $this->db->update('peminjaman',['status'=>'kembali']);
+    // update status
+    $this->db->where('id', $id);
+    $this->db->update('peminjaman', ['status' => 'kembali']);
 
-        $this->db->set('stok', 'stok + 1',FALSE);
-        $this->db->where('id', $detail->buku_id);
-        $this->db->update('buku');
+    // update stok
+    $this->db->set('stok', 'stok + 1', FALSE);
+    $this->db->where('id', $detail->buku_id);
+    $this->db->update('buku');
     }
 }
