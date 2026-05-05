@@ -30,6 +30,13 @@
     </a>
   </li>
 
+  <!-- Menu Barang -->
+  <li class="nav-item">
+    <a class="nav-link" href="<?= site_url('peminjaman') ?>">
+      <i class="fas fa-box"></i>
+      <span>Peminjaman</span>
+    </a>
+  </li>
 
   <hr class="sidebar-divider d-none d-md-block">
 
